@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FAQ &amp; Troubleshooting — Opportunity Insights</title>
+<link href="https://fonts.googleapis.com/css2?family=Cardo:ital,wght@0,400;0,700;1,400&family=Roboto:wght@300;400;500;700;900&family=Chivo+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #f5f5f4;
+  --surface: #ffffff;
+  --surface2: #fafaf9;
+  --border: #e5e5e4;
+  --border2: #d1d0ce;
+  --black: #000000;
+  --graphite: #171721;
+  --surface-gray: #BBBCBC;
+  --horizon: #6296AD;
+  --white: #FFFFFF;
+  --plum: #B08FA2;
+  --mint: #8FCDA8;
+  --cinder: #C05527;
+  --indigo: #275198;
+  --cobalt: #21B5FF;
+  --accent: #6296AD;
+  --accent-dark: #4a7a8f;
+  --accent2: #275198;
+  --green: #8FCDA8;
+  --green-dark: #2d7a50;
+  --text: #171721;
+  --text-muted: #6b6b72;
+  --text-dim: #9b9b9e;
+  --mono: 'Chivo Mono', monospace;
+  --sans: 'Roboto', sans-serif;
+  --serif: 'Cardo', serif;
+}
+
+body {
+  font-family: var(--sans);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  line-height: 1.6;
+}
+
+/* -- LAYOUT -- */
+.page { max-width: 960px; margin: 0 auto; padding: 40px 24px 80px; }
+
+.back-link {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: var(--mono); font-size: 12px; color: var(--accent);
+  text-decoration: none; margin-bottom: 32px; letter-spacing: 0.02em;
+}
+.back-link:hover { color: var(--accent-dark); }
+
+/* -- HERO -- */
+.hero {
+  background: var(--graphite);
+  padding: 44px 40px;
+  border-radius: 12px;
+  margin-bottom: 40px;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute; top: 0; right: 0; bottom: 0;
+  width: 4px;
+  background: linear-gradient(180deg, var(--surface-gray), var(--plum), var(--horizon), #E8A090, var(--surface-gray));
+}
+.hero-tag {
+  font-family: var(--mono); color: var(--surface-gray);
+  font-size: 10px; font-weight: 500; letter-spacing: 0.12em;
+  text-transform: uppercase; margin-bottom: 14px;
+}
+.hero h1 {
+  font-family: var(--serif); font-size: 36px; font-weight: 400;
+  color: var(--white); line-height: 1.15; margin-bottom: 12px;
+}
+.hero h1 span { color: var(--horizon); }
+.hero p {
+  font-size: 14px; color: var(--surface-gray); line-height: 1.65;
+  max-width: 600px; font-weight: 300;
+}
+.hero-stats {
+  display: flex; gap: 36px; margin-top: 24px;
+}
+.stat-num {
+  font-family: var(--mono); font-size: 24px; font-weight: 700;
+  color: var(--white); letter-spacing: -0.02em;
+}
+.stat-label {
+  font-size: 10px; color: var(--surface-gray); margin-top: 2px;
+  font-family: var(--mono); text-transform: uppercase; letter-spacing: 0.08em;
+}
+
+/* -- CATEGORY HEADER -- */
+.category-header {
+  display: flex; align-items: center; gap: 12px;
+  margin: 40px 0 20px; padding-bottom: 12px;
+  border-bottom: 2px solid var(--graphite);
+}
+.category-badge {
+  font-family: var(--mono); font-size: 10px; font-weight: 700;
+  color: var(--white); background: var(--graphite);
+  padding: 4px 10px; border-radius: 4px; text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.category-title { font-size: 20px; font-weight: 900; color: var(--graphite); }
+.category-count { font-size: 13px; color: var(--text-muted); margin-left: auto; }
+
+/* -- FAQ ITEM -- */
+.faq-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px 24px;
+  margin-bottom: 12px;
+  transition: box-shadow 0.2s;
+}
+.faq-item:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.06); }
+
+.faq-q {
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--graphite);
+  margin-bottom: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+.faq-q::before {
+  content: 'Q';
+  font-family: var(--mono); font-size: 10px; font-weight: 700;
+  color: var(--white); background: var(--accent);
+  padding: 2px 6px; border-radius: 3px;
+  flex-shrink: 0; margin-top: 2px;
+}
+
+.faq-a {
+  font-size: 14px;
+  color: var(--text-muted);
+  line-height: 1.6;
+  padding-left: 30px;
+}
+.faq-a strong { color: var(--graphite); font-weight: 600; }
+.faq-a code {
+  font-family: var(--mono); font-size: 12px;
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 3px; padding: 1px 5px;
+}
+
+/* -- HOW-TO -- */
+.how-to-section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 32px 36px;
+  margin-bottom: 32px;
+}
+.how-to-section h2 {
+  font-size: 20px; font-weight: 900; color: var(--graphite);
+  margin-bottom: 6px; letter-spacing: -0.01em;
+}
+.how-to-section .sub { font-size: 14px; color: var(--text-muted); margin-bottom: 20px; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <a href="index.html" class="back-link">&larr; Back to Deployment Guide</a>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-tag">Support &middot; Troubleshooting &middot; v1.0</div>
+    <h1>Opportunity Insights<br><span>FAQ &amp; Troubleshooting</span></h1>
+    <p>Answers to the most common questions and issues that arise during Opportunity Insights deployment. Search by category or scan the full list.</p>
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-num">15+</div><div class="stat-label">FAQs</div></div>
+      <div class="stat"><div class="stat-num">4</div><div class="stat-label">Categories</div></div>
+    </div>
+  </div>
+
+  <!-- CATEGORY 1: TABLE DEPLOYMENT -->
+  <div class="category-header">
+    <span class="category-badge">Category 1</span>
+    <span class="category-title">Table Deployment Issues</span>
+    <span class="category-count">6 items</span>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">Table shows zero rows</div>
+    <div class="faq-a">Most common cause: the filter combination is too restrictive for this customer's data. The Stalled Detection table filters for <strong>engagement &lt; 50 AND zero meetings in 30 days</strong> &mdash; if the customer has limited data, try relaxing the engagement threshold. To test: remove all filters and re-run to verify the API returns data, then add filters back one at a time.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">Script says "Not logged in"</div>
+    <div class="faq-a">The script checks your Backstory session. You must be on <strong>app.people.ai</strong> and logged in BEFORE running the script. Navigate to app.people.ai, verify you see the dashboard, then open DevTools and run the script.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">Bookmarklet does nothing when clicked</div>
+    <div class="faq-a">Some browsers truncate long bookmark URLs. Use the console script instead &mdash; click <strong>"Show console script"</strong> and copy/paste into DevTools. Console scripts are recommended for all tables.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">Table created but columns are empty</div>
+    <div class="faq-a">The metric may not be enabled for this customer's instance. OOTB metrics should all be available, but some require activity capture to have been running for <strong>at least 7 days</strong>. Check with Backstory support if core metrics like <code>engagement_level</code> show as blank.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">I see duplicate tables</div>
+    <div class="faq-a">Each script run creates a new table. If you ran it twice, you'll have two. Delete the duplicate from <strong>EDB (Explore Data Builder)</strong> in Backstory.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">Hidden Opportunity table shows opportunities instead of accounts</div>
+    <div class="faq-a">Make sure you ran the correct script (Table 3). This table is <strong>account-level</strong>, not opportunity-level. If it shows opportunities, you may have run one of the other table scripts by mistake.</div>
+  </div>
+
+  <!-- CATEGORY 2: CUSTOM METRICS -->
+  <div class="category-header">
+    <span class="category-badge">Category 2</span>
+    <span class="category-title">Custom Metrics Issues</span>
+    <span class="category-count">3 items</span>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">Custom metric shows null/blank values</div>
+    <div class="faq-a">Custom FormulaMetrics take <strong>up to 24 hours</strong> to populate after creation. If still blank after 24 hours, verify the metric definition was saved correctly in the Admin Console.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">Where do I create custom metrics?</div>
+    <div class="faq-a">Navigate to <strong>Backstory Admin &rarr; Custom Metrics &rarr; Metric Builder</strong>. See the <a href="custom-metrics.html" style="color: var(--accent);">Custom Metrics Guide</a> for full JSON definitions.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">Do I need custom metrics to use OI?</div>
+    <div class="faq-a"><strong>No.</strong> The 4 OOTB tables work without any custom metrics. Custom metrics power the 4 Enhanced tables (Tables 5-8) which add computed signals like email responsiveness ratio and stakeholder breadth.</div>
+  </div>
+
+  <!-- CATEGORY 3: SALESAI SIGNALS -->
+  <div class="category-header">
+    <span class="category-badge">Category 3</span>
+    <span class="category-title">SalesAI Signals Issues</span>
+    <span class="category-count">3 items</span>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">Signal not appearing on opportunity records</div>
+    <div class="faq-a">Signals run on a schedule (<strong>2-3x per week</strong>). After activation, wait for the next scheduled run. Check SalesAI settings in Admin to verify the signal is active.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">Signal output is generic or unhelpful</div>
+    <div class="faq-a">The signal quality depends on available activity data. Opportunities with very little activity will get less specific insights. Ensure the opportunity has <strong>at least 2 weeks</strong> of captured meetings and emails for meaningful analysis.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">Can I customize which metrics the signal uses?</div>
+    <div class="faq-a">Yes. The signal prompt specifies which OOTB metrics to include as context. See the <a href="signals-guide.html" style="color: var(--accent);">SalesAI Signals Guide</a> for the full prompt with all configurable metrics.</div>
+  </div>
+
+  <!-- CATEGORY 4: SLACK BOT -->
+  <div class="category-header">
+    <span class="category-badge">Category 4</span>
+    <span class="category-title">Slack Bot Issues</span>
+    <span class="category-count">3 items</span>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">/oi command says "failed because the app did not respond"</div>
+    <div class="faq-a">Check that the <strong>n8n workflow is active</strong> and the webhook URL is correct. Common issue: another Slack app may have claimed the same slash command name. Try renaming the command.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">Slack bot runs but nothing posts back</div>
+    <div class="faq-a">Check n8n execution logs for which node failed. Most common causes: <strong>Backstory auth token expired</strong> (re-check client_id/client_secret) or the <strong>response_url from Slack has expired</strong> (Slack URLs expire after 30 minutes).</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">Results take too long</div>
+    <div class="faq-a">The bot runs Claude AI analysis on each flagged deal, which takes <strong>1-3 minutes</strong>. This is expected. Results are cached for the day, so subsequent runs are instant.</div>
+  </div>
+
+  <!-- GENERAL -->
+  <div class="category-header">
+    <span class="category-badge">General</span>
+    <span class="category-title">General Questions</span>
+    <span class="category-count">3 items</span>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">What data does Opportunity Insights use?</div>
+    <div class="faq-a">100% OOTB Backstory metrics &mdash; engagement level, meeting counts, email counts, days in stage, close dates, executive engagement. <strong>No custom fields, no org-specific fields, no SalesAI dependency</strong> for the base product.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">Does this work for any Backstory customer?</div>
+    <div class="faq-a">Yes. All metrics use the <code>ootb_</code> prefix and are core platform metrics available on every instance. The only requirement is that <strong>activity capture is running</strong> and engagement scores are populating.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">How long does the full deployment take?</div>
+    <div class="faq-a"><strong>~15 minutes</strong> for the 4 OOTB tables + board. Add ~20 minutes if deploying custom metrics and enhanced tables. SalesAI signals are a separate ~20 minute configuration.</div>
+  </div>
+
+</div>
+</body>
+</html>

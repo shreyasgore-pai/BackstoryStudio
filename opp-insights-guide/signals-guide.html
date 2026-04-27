@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SalesAI Signals Guide — Opportunity Insights</title>
+<link href="https://fonts.googleapis.com/css2?family=Cardo:ital,wght@0,400;0,700;1,400&family=Roboto:wght@300;400;500;700;900&family=Chivo+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #f5f5f4;
+  --surface: #ffffff;
+  --surface2: #fafaf9;
+  --border: #e5e5e4;
+  --border2: #d1d0ce;
+  --black: #000000;
+  --graphite: #171721;
+  --surface-gray: #BBBCBC;
+  --horizon: #6296AD;
+  --white: #FFFFFF;
+  --plum: #B08FA2;
+  --mint: #8FCDA8;
+  --cinder: #C05527;
+  --indigo: #275198;
+  --cobalt: #21B5FF;
+  --accent: #6296AD;
+  --accent-dark: #4a7a8f;
+  --accent2: #275198;
+  --green: #8FCDA8;
+  --green-dark: #2d7a50;
+  --text: #171721;
+  --text-muted: #6b6b72;
+  --text-dim: #9b9b9e;
+  --mono: 'Chivo Mono', monospace;
+  --sans: 'Roboto', sans-serif;
+  --serif: 'Cardo', serif;
+}
+
+body { font-family: var(--sans); background: var(--bg); color: var(--text); min-height: 100vh; line-height: 1.6; }
+.page { max-width: 960px; margin: 0 auto; padding: 40px 24px 80px; }
+
+.back-link {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: var(--mono); font-size: 12px; color: var(--accent);
+  text-decoration: none; margin-bottom: 32px; letter-spacing: 0.02em;
+}
+.back-link:hover { color: var(--accent-dark); }
+
+/* ── HERO ── */
+.hero {
+  background: var(--graphite); padding: 44px 40px; border-radius: 12px;
+  margin-bottom: 40px; position: relative; overflow: hidden;
+}
+.hero::before {
+  content: ''; position: absolute; top: 0; right: 0; bottom: 0; width: 4px;
+  background: linear-gradient(180deg, var(--surface-gray), var(--plum), var(--horizon), #E8A090, var(--surface-gray));
+}
+.hero-tag {
+  font-family: var(--mono); color: var(--surface-gray); font-size: 10px;
+  font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 14px;
+}
+.hero h1 { font-family: var(--serif); font-size: 36px; font-weight: 400; color: var(--white); line-height: 1.15; margin-bottom: 12px; }
+.hero h1 span { color: var(--horizon); }
+.hero p { font-size: 14px; color: var(--surface-gray); line-height: 1.65; max-width: 600px; font-weight: 300; }
+.hero-stats { display: flex; gap: 36px; margin-top: 24px; }
+.stat-num { font-family: var(--mono); font-size: 24px; font-weight: 700; color: var(--white); letter-spacing: -0.02em; }
+.stat-label { font-size: 10px; color: var(--surface-gray); margin-top: 2px; font-family: var(--mono); text-transform: uppercase; letter-spacing: 0.08em; }
+
+/* ── HOW-TO ── */
+.how-to-section {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+  padding: 32px 36px; margin-bottom: 32px;
+}
+.how-to-section h2 { font-size: 20px; font-weight: 900; color: var(--graphite); margin-bottom: 6px; }
+.how-to-section .sub { font-size: 14px; color: var(--text-muted); margin-bottom: 20px; }
+.steps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+.how-step { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 18px 20px; }
+.how-step-num { font-family: var(--mono); font-size: 10px; font-weight: 500; color: var(--accent); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; }
+.how-step-title { font-size: 15px; font-weight: 700; color: var(--graphite); margin-bottom: 4px; }
+.how-step-desc { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
+
+/* ── RECOMMENDATION ── */
+.recommendation {
+  background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 12px;
+  padding: 24px 28px; margin-bottom: 40px; display: flex; gap: 16px; align-items: flex-start;
+}
+.rec-icon { font-size: 28px; flex-shrink: 0; margin-top: 2px; }
+.rec-body h3 { font-size: 16px; font-weight: 700; color: var(--accent2); margin-bottom: 4px; }
+.rec-body p { font-size: 14px; color: var(--text-muted); line-height: 1.5; }
+
+/* ── SECTION HEADERS ── */
+.section-header {
+  display: flex; align-items: center; gap: 12px;
+  margin: 40px 0 20px; padding-bottom: 12px;
+  border-bottom: 2px solid var(--graphite);
+}
+.section-badge {
+  font-family: var(--mono); font-size: 10px; font-weight: 700;
+  color: var(--white); background: var(--graphite);
+  padding: 4px 10px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.08em;
+}
+.section-title { font-size: 20px; font-weight: 900; color: var(--graphite); }
+.section-desc { font-size: 13px; color: var(--text-muted); margin-left: auto; }
+
+/* ── SIGNAL CARD ── */
+.signal-card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+  margin-bottom: 20px; overflow: hidden; transition: box-shadow 0.2s;
+}
+.signal-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.06); }
+
+.signal-top { padding: 24px 28px 20px; display: flex; align-items: flex-start; gap: 16px; }
+.signal-icon {
+  width: 48px; height: 48px; border-radius: 12px; display: flex;
+  align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0;
+}
+.signal-icon.stall { background: #fef2f2; }
+.signal-icon.risk { background: #fef7ed; }
+.signal-icon.expansion { background: #f0fdf4; }
+.signal-icon.accel { background: #eff6ff; }
+.signal-icon.unified { background: #f5f3ff; }
+
+.signal-info { flex: 1; min-width: 0; }
+.signal-name { font-size: 17px; font-weight: 700; color: var(--graphite); margin-bottom: 2px; }
+.signal-meta-row {
+  display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 8px;
+  font-family: var(--mono); font-size: 11px; color: var(--text-dim);
+}
+.signal-desc { font-size: 14px; color: var(--text-muted); line-height: 1.5; }
+
+.signal-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+.tag {
+  font-family: var(--mono); font-size: 10px; font-weight: 500;
+  padding: 3px 8px; border-radius: 4px; letter-spacing: 0.02em;
+}
+.tag.priority-critical { background: #fef2f2; color: #dc2626; }
+.tag.priority-high { background: #fef7ed; color: #d97706; }
+.tag.priority-unified { background: #f5f3ff; color: #7c3aed; }
+.tag.stage { background: #ecfdf5; color: #065f46; }
+.tag.time { background: #f1f5f9; color: #475569; }
+
+/* ── DETECTION PATTERNS ── */
+.detect-section { padding: 0 28px 16px; }
+.detect-section .label {
+  font-family: var(--mono); font-size: 10px; text-transform: uppercase;
+  letter-spacing: 0.08em; color: var(--text-dim); margin-bottom: 10px;
+}
+.detect-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.detect-item {
+  display: flex; align-items: flex-start; gap: 8px;
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 6px; padding: 10px 14px; font-size: 13px; color: var(--text-muted); line-height: 1.4;
+}
+.detect-item .dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  flex-shrink: 0; margin-top: 6px;
+}
+.dot.red { background: #dc2626; }
+.dot.orange { background: #d97706; }
+.dot.green { background: #10b981; }
+.dot.blue { background: #3b82f6; }
+.dot.purple { background: #7c3aed; }
+
+/* ── SCORING ── */
+.scoring-bar {
+  display: flex; margin: 0 28px 16px; border-radius: 6px; overflow: hidden;
+  height: 28px; font-family: var(--mono); font-size: 10px; font-weight: 500;
+}
+.scoring-bar .seg {
+  display: flex; align-items: center; justify-content: center;
+  padding: 0 8px; white-space: nowrap; color: white;
+}
+.seg.none { background: #94a3b8; flex: 1.2; }
+.seg.minor { background: #f59e0b; flex: 0.8; }
+.seg.moderate { background: #ea580c; flex: 0.8; }
+.seg.high { background: #dc2626; flex: 1.2; }
+
+/* ── METRICS LIST ── */
+.metrics-section { padding: 0 28px 16px; }
+.metrics-section .label {
+  font-family: var(--mono); font-size: 10px; text-transform: uppercase;
+  letter-spacing: 0.08em; color: var(--text-dim); margin-bottom: 8px;
+}
+.metrics-pills { display: flex; gap: 6px; flex-wrap: wrap; }
+.metric-pill {
+  font-family: var(--mono); font-size: 11px; padding: 4px 10px;
+  border-radius: 4px; background: var(--graphite); color: #a8b2c1;
+}
+
+/* ── OUTPUT PREVIEW ── */
+.output-section { margin: 0 28px 16px; }
+.output-section .label {
+  font-family: var(--mono); font-size: 10px; text-transform: uppercase;
+  letter-spacing: 0.08em; color: var(--text-dim); margin-bottom: 8px;
+}
+.output-preview {
+  background: var(--graphite); border-radius: 8px; padding: 18px 22px;
+  font-family: var(--mono); font-size: 12px; line-height: 1.7; color: #a8b2c1;
+}
+.output-preview .icon-line { font-size: 14px; font-weight: 700; color: var(--white); margin-bottom: 4px; }
+.output-preview .bullet { color: var(--cobalt); }
+.output-preview .action { color: var(--mint); margin-top: 8px; }
+.output-preview .dim { color: #636d83; }
+
+/* ── PROMPT BLOCK ── */
+.prompt-toggle {
+  display: flex; align-items: center; gap: 6px;
+  margin: 0 28px 4px; padding: 8px 0;
+  font-family: var(--mono); font-size: 12px; color: var(--accent);
+  cursor: pointer; border: none; background: none;
+}
+.prompt-toggle:hover { color: var(--accent-dark); }
+.prompt-block { display: none; margin: 0 28px 20px; position: relative; }
+.prompt-block.open { display: block; }
+.prompt-pre {
+  background: var(--graphite); color: #a8b2c1; padding: 16px 20px;
+  border-radius: 8px; font-family: var(--mono); font-size: 11px;
+  line-height: 1.5; overflow-x: auto; max-height: 500px; overflow-y: auto;
+  white-space: pre-wrap; word-wrap: break-word;
+}
+.prompt-copy {
+  position: absolute; top: 8px; right: 8px;
+  font-family: var(--mono); font-size: 11px; padding: 4px 10px;
+  border: 1px solid rgba(255,255,255,0.2); border-radius: 4px;
+  background: rgba(255,255,255,0.05); color: var(--surface-gray);
+  cursor: pointer; transition: all 0.2s;
+}
+.prompt-copy:hover { background: var(--horizon); color: white; border-color: var(--horizon); }
+
+/* ── PRIORITY TABLE ── */
+.priority-table {
+  margin: 0 28px 20px; border-collapse: collapse; width: calc(100% - 56px); font-size: 13px;
+}
+.priority-table th {
+  font-family: var(--mono); font-size: 10px; text-transform: uppercase;
+  letter-spacing: 0.06em; color: var(--text-dim); text-align: left;
+  padding: 8px 12px; border-bottom: 2px solid var(--border);
+}
+.priority-table td {
+  padding: 10px 12px; border-bottom: 1px solid var(--border); color: var(--text-muted);
+}
+.priority-table td:first-child { font-weight: 600; color: var(--graphite); white-space: nowrap; }
+
+/* ── COMPARISON TABLE ── */
+.comparison {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+  padding: 28px; margin-bottom: 32px;
+}
+.comparison h3 { font-size: 16px; font-weight: 900; color: var(--graphite); margin-bottom: 16px; }
+.compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.compare-card {
+  border: 1px solid var(--border); border-radius: 8px; padding: 20px;
+  text-align: center;
+}
+.compare-card h4 { font-size: 15px; font-weight: 700; color: var(--graphite); margin-bottom: 8px; }
+.compare-card .rec { font-family: var(--mono); font-size: 10px; color: var(--white); background: var(--green-dark); padding: 2px 8px; border-radius: 10px; display: inline-block; margin-bottom: 10px; }
+.compare-card p { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
+.compare-pros { text-align: left; margin-top: 12px; font-size: 12px; color: var(--text-muted); }
+.compare-pros li { margin-bottom: 4px; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <a href="index.html" class="back-link">&larr; Back to Deployment Guide</a>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-tag">SalesAI Signals · Configuration Guide · v1.0</div>
+    <h1>Opportunity Insights<br><span>SalesAI Signals</span></h1>
+    <p>LLM-powered signals that analyze engagement patterns on every open opportunity. Surfaces stall risks, deal threats, expansion potential, and acceleration opportunities — directly on the opportunity record in Backstory.</p>
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-num">1</div><div class="stat-label">Unified Signal</div></div>
+      <div class="stat"><div class="stat-num">4</div><div class="stat-label">Individual Signals</div></div>
+      <div class="stat"><div class="stat-num">2-3x</div><div class="stat-label">Weekly Updates</div></div>
+    </div>
+  </div>
+
+  <!-- HOW TO CREATE -->
+  <div class="how-to-section">
+    <h2>How to Create SalesAI Signals</h2>
+    <p class="sub">Signals are configured in the Backstory Admin Console under SalesAI settings.</p>
+    <div class="steps-grid">
+      <div class="how-step">
+        <div class="how-step-num">Step 1</div>
+        <div class="how-step-title">Navigate to SalesAI</div>
+        <div class="how-step-desc">Go to <strong>Backstory Admin → SalesAI → Signals</strong>. Click <strong>Create New Signal</strong>.</div>
+      </div>
+      <div class="how-step">
+        <div class="how-step-num">Step 2</div>
+        <div class="how-step-title">Configure Signal</div>
+        <div class="how-step-desc">Set the signal name, icon, object type (Opportunity), and which stages it applies to.</div>
+      </div>
+      <div class="how-step">
+        <div class="how-step-num">Step 3</div>
+        <div class="how-step-title">Paste the Prompt</div>
+        <div class="how-step-desc">Copy the system prompt from this guide and paste it into the signal's prompt field. Select which OOTB metrics to include as context.</div>
+      </div>
+      <div class="how-step">
+        <div class="how-step-num">Step 4</div>
+        <div class="how-step-title">Activate &amp; Test</div>
+        <div class="how-step-desc">Save and activate. The signal runs on the next scheduled cycle (2-3x weekly). Check a few opportunity records to verify output.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DEPLOYMENT RECOMMENDATION -->
+  <div class="recommendation">
+    <div class="rec-icon">💡</div>
+    <div class="rec-body">
+      <h3>Recommended: Start with the Unified Signal</h3>
+      <p>The unified signal evaluates all 4 patterns in a single pass and displays only the highest-priority insight. This reduces signal noise — reps see one actionable insight per deal instead of four. Deploy individual signals only if you need more granular control or different update frequencies per pattern.</p>
+    </div>
+  </div>
+
+  <!-- UNIFIED SIGNAL -->
+  <div class="section-header">
+    <span class="section-badge">Recommended</span>
+    <span class="section-title">Unified Signal</span>
+    <span class="section-desc">One signal, all 4 patterns</span>
+  </div>
+
+  <div class="signal-card" id="unified">
+    <div class="signal-top">
+      <div class="signal-icon unified">🧠</div>
+      <div class="signal-info">
+        <div class="signal-name">Opportunity Intelligence</div>
+        <div class="signal-meta-row">
+          <span>All Open Opportunities</span>
+          <span>·</span>
+          <span>2-3x weekly</span>
+        </div>
+        <div class="signal-desc">Evaluates all 4 opportunity insight patterns in a single pass. Scores each pattern 0.0–1.0 and surfaces only the highest-priority finding. One signal per deal, maximum clarity.</div>
+        <div class="signal-tags">
+          <span class="tag priority-unified">Unified</span>
+          <span class="tag stage">All Open Opps</span>
+          <span class="tag time">~20 min setup</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Priority Hierarchy -->
+    <div class="detect-section">
+      <div class="label">Priority Hierarchy (highest priority wins)</div>
+    </div>
+    <table class="priority-table">
+      <thead>
+        <tr><th>Priority</th><th>Pattern</th><th>Threshold</th><th>Response Time</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>🔴 1st</td><td>Stall Risk</td><td>Score &gt; 0.65</td><td>Act within 48 hours</td></tr>
+        <tr><td>⚠️ 2nd</td><td>At Risk</td><td>Score &gt; 0.60</td><td>Act within 1 week</td></tr>
+        <tr><td>🚀 3rd</td><td>Accelerating</td><td>Score &gt; 0.70</td><td>Capitalize immediately</td></tr>
+        <tr><td>💎 4th</td><td>Expansion Opportunity</td><td>Score &gt; 0.65</td><td>Reposition within 2 weeks</td></tr>
+        <tr><td>✅ 5th</td><td>Healthy</td><td>All below thresholds</td><td>Continue as planned</td></tr>
+      </tbody>
+    </table>
+
+    <!-- Detection Patterns -->
+    <div class="detect-section">
+      <div class="label">All 4 detection patterns evaluated</div>
+      <div class="detect-grid">
+        <div class="detect-item"><div class="dot red"></div>Meeting frequency decline (40%+ drop)</div>
+        <div class="detect-item"><div class="dot orange"></div>Engagement imbalance (&gt;70% outbound)</div>
+        <div class="detect-item"><div class="dot red"></div>No upcoming meetings scheduled</div>
+        <div class="detect-item"><div class="dot orange"></div>Limited exec access (&lt;25%)</div>
+        <div class="detect-item"><div class="dot red"></div>Email response degradation</div>
+        <div class="detect-item"><div class="dot orange"></div>Single-threading (&lt;3 people)</div>
+        <div class="detect-item"><div class="dot blue"></div>Meeting frequency surge (50%+)</div>
+        <div class="detect-item"><div class="dot green"></div>High activity on small deal</div>
+        <div class="detect-item"><div class="dot blue"></div>Executive activation (new execs)</div>
+        <div class="detect-item"><div class="dot green"></div>Cross-functional engagement</div>
+      </div>
+    </div>
+
+    <!-- Output Preview -->
+    <div class="output-section">
+      <div class="label">Example output on opportunity record</div>
+      <div class="output-preview">
+        <div class="icon-line">🔴 STALL RISK - High Confidence</div>
+        <span class="bullet">•</span> Meeting cadence dropped 60% (4→1 in last 30d)<br>
+        <span class="bullet">•</span> Email response ratio 0.2 — one-way communication<br>
+        <span class="bullet">•</span> No upcoming meetings scheduled, 0 exec touchpoints in 14d<br>
+        <div class="action">Action: Schedule exec-to-exec call this week. Re-engage champion with value-add content before pipeline review.</div>
+      </div>
+    </div>
+
+    <!-- Metrics -->
+    <div class="metrics-section">
+      <div class="label">OOTB metrics included as context</div>
+      <div class="metrics-pills">
+        <span class="metric-pill">engagement_level</span>
+        <span class="metric-pill">days_in_stage</span>
+        <span class="metric-pill">meetings (7d/14d/30d)</span>
+        <span class="metric-pill">upcoming_meetings (14d)</span>
+        <span class="metric-pill">emails_sent/received</span>
+        <span class="metric-pill">executive_activities</span>
+        <span class="metric-pill">people_engaged</span>
+        <span class="metric-pill">in_person_meetings</span>
+        <span class="metric-pill">converted_amount</span>
+        <span class="metric-pill">forecast_category</span>
+      </div>
+    </div>
+
+    <!-- Full Prompt -->
+    <button class="prompt-toggle" onclick="togglePrompt('prompt-unified', this)"><span>▶</span> Show full system prompt</button>
+    <div class="prompt-block" id="prompt-unified">
+      <button class="prompt-copy" onclick="copyPrompt('prompt-unified')">Copy</button>
+      <pre class="prompt-pre">You are an AI sales analyst for Backstory. Analyze the following opportunity metrics and determine the most critical insight for this deal.
+
+## Analysis Framework
+
+Evaluate ALL 4 patterns and score each (0.0 to 1.0):
+
+1. **STALL RISK** — Is this deal losing momentum?
+   - Meeting frequency decline (40%+ drop)
+   - No upcoming meetings scheduled
+   - Email response degradation (inbound < 30% of outbound)
+   - Executive disengagement (0 exec activities in 14d)
+   - Extended stage duration (>1.75x average)
+
+2. **AT RISK** — Are there emerging threats?
+   - Engagement imbalance (>70% outbound emails)
+   - Limited executive access (<25% meetings with Dir/VP/Exec)
+   - Single-threading (<3 people engaged)
+   - Forecast category misaligned with stage
+
+3. **ACCELERATING** — Is this deal ready to close faster?
+   - Meeting frequency surge (50%+ increase)
+   - Executive activation (new execs joining)
+   - In-person meeting spike
+   - Rapid stage progression (below average cycle time)
+
+4. **EXPANSION OPPORTUNITY** — Is the deal scope too small?
+   - High activity count on small deal (activities > 2x median for deal size)
+   - Executive over-engagement (>50% meetings with Dir/VP/Exec)
+   - Cross-functional engagement (contacts across 3+ departments)
+   - New stakeholders joining rapidly
+
+## Priority Hierarchy
+
+Display the HIGHEST priority pattern that exceeds its threshold:
+
+1. STALL RISK (Score > 0.65) — Most urgent, act within 48 hours
+2. AT RISK (Score > 0.60) — Emerging threats, act within 1 week
+3. ACCELERATING (Score > 0.70) — Capitalize immediately
+4. EXPANSION OPPORTUNITY (Score > 0.65) — Reposition within 2 weeks
+5. HEALTHY (All scores below thresholds) — Continue as planned
+
+## Output Format
+
+{ICON} {CATEGORY} - {Confidence Level}
+• {Bullet 1: specific metric that triggered this}
+• {Bullet 2: supporting signal}
+• {Bullet 3: trend or comparison}
+
+Action: {Specific recommended next step}</pre>
+    </div>
+  </div>
+
+  <!-- INDIVIDUAL SIGNALS -->
+  <div class="section-header">
+    <span class="section-badge">Alternative</span>
+    <span class="section-title">Individual Signals</span>
+    <span class="section-desc">4 separate signals, more granular control</span>
+  </div>
+
+  <!-- Comparison -->
+  <div class="comparison">
+    <h3>Unified vs Individual — When to Use Each</h3>
+    <div class="compare-grid">
+      <div class="compare-card">
+        <h4>🧠 Unified Signal</h4>
+        <span class="rec">Recommended</span>
+        <p>One signal per opportunity. Evaluates all 4 patterns and shows only the most critical.</p>
+        <ul class="compare-pros">
+          <li>Less noise — reps see one insight per deal</li>
+          <li>Simpler to deploy (1 signal vs 4)</li>
+          <li>Built-in prioritization logic</li>
+          <li>Lower LLM cost per opportunity</li>
+        </ul>
+      </div>
+      <div class="compare-card">
+        <h4>🎛️ Individual Signals</h4>
+        <p>Four separate signals. Each runs independently with its own schedule and configuration.</p>
+        <ul class="compare-pros">
+          <li>Per-pattern update frequency control</li>
+          <li>Can enable/disable patterns per customer</li>
+          <li>More detailed output per pattern</li>
+          <li>Different stage filters per signal</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Signal 1: Stall Risk -->
+  <div class="signal-card" id="stall-risk">
+    <div class="signal-top">
+      <div class="signal-icon stall">🔴</div>
+      <div class="signal-info">
+        <div class="signal-name">Deal Stall Risk</div>
+        <div class="signal-meta-row">
+          <span>Proposal+ stages</span>
+          <span>·</span>
+          <span>~20 min setup</span>
+        </div>
+        <div class="signal-desc">Detects deals losing momentum — declining meetings, unanswered emails, executive disengagement, and extended time in stage.</div>
+        <div class="signal-tags">
+          <span class="tag priority-critical">Critical Priority</span>
+          <span class="tag stage">Proposal+</span>
+        </div>
+      </div>
+    </div>
+    <div class="scoring-bar">
+      <div class="seg none">0.0–0.3 No Stall</div>
+      <div class="seg minor">0.3–0.5 Monitor</div>
+      <div class="seg moderate">0.5–0.7 Investigate</div>
+      <div class="seg high">0.7–1.0 Act Now</div>
+    </div>
+    <div class="detect-section">
+      <div class="label">Detection patterns</div>
+      <div class="detect-grid">
+        <div class="detect-item"><div class="dot red"></div>Meeting frequency decline (40%+ drop vs baseline)</div>
+        <div class="detect-item"><div class="dot red"></div>No upcoming meetings scheduled</div>
+        <div class="detect-item"><div class="dot red"></div>Email response degradation (inbound declining)</div>
+        <div class="detect-item"><div class="dot red"></div>Executive disengagement (0 exec in 14d)</div>
+        <div class="detect-item"><div class="dot red"></div>Extended stage duration (&gt;1.75x average)</div>
+      </div>
+    </div>
+    <div class="output-section">
+      <div class="label">Example output</div>
+      <div class="output-preview">
+        <div class="icon-line">🔴 STALL RISK - High Confidence</div>
+        <span class="bullet">•</span> Meetings dropped from 4 to 0 in 30 days<br>
+        <span class="bullet">•</span> Email response ratio: 0.15 (one-way chasing)<br>
+        <span class="bullet">•</span> No executive engagement in 21 days<br>
+        <span class="bullet">•</span> In stage for 45 days (avg: 22 days)<br>
+        <div class="action">Action: Request exec-to-exec meeting within 48 hours. If no response in 5 days, flag for pipeline review.</div>
+      </div>
+    </div>
+    <div class="metrics-section">
+      <div class="label">OOTB metrics</div>
+      <div class="metrics-pills">
+        <span class="metric-pill">meetings (14d/30d)</span>
+        <span class="metric-pill">upcoming_meetings (14d)</span>
+        <span class="metric-pill">emails_received (14d/30d)</span>
+        <span class="metric-pill">emails_sent (14d/30d)</span>
+        <span class="metric-pill">executive_activities (30d)</span>
+        <span class="metric-pill">days_in_stage</span>
+        <span class="metric-pill">engagement_level</span>
+        <span class="metric-pill">people_engaged (30d)</span>
+      </div>
+    </div>
+    <button class="prompt-toggle" onclick="togglePrompt('prompt-stall', this)"><span>▶</span> Show full system prompt</button>
+    <div class="prompt-block" id="prompt-stall">
+      <button class="prompt-copy" onclick="copyPrompt('prompt-stall')">Copy</button>
+      <pre class="prompt-pre">You are an AI sales analyst specializing in deal momentum analysis. Evaluate whether this opportunity is stalling based on the engagement metrics provided.
+
+## What to Detect
+- Meeting frequency decline (40%+ drop vs baseline)
+- No upcoming meetings scheduled
+- Email response degradation (inbound declining)
+- Executive disengagement (no exec activities in 14+ days)
+- Extended stage duration (>1.75x average for this stage)
+
+## Scoring
+Score confidence from 0.0 to 1.0:
+- 0.0-0.3: No stall indicators
+- 0.3-0.5: Minor deceleration, monitor
+- 0.5-0.7: Moderate stall risk, investigate
+- 0.7-1.0: High-confidence stall, act within 48 hours
+
+## Output Format
+🔴 STALL RISK - {Confidence Level}
+• {Meeting cadence change}
+• {Email responsiveness}
+• {Executive engagement status}
+• {Stage duration context}
+
+Action: {Specific next step with timeline}</pre>
+    </div>
+  </div>
+
+  <!-- Signal 2: Deal Risk -->
+  <div class="signal-card" id="deal-risk">
+    <div class="signal-top">
+      <div class="signal-icon risk">⚠️</div>
+      <div class="signal-info">
+        <div class="signal-name">Deal Risk Assessment</div>
+        <div class="signal-meta-row">
+          <span>Negotiation+ stages</span>
+          <span>·</span>
+          <span>~25 min setup</span>
+        </div>
+        <div class="signal-desc">Detects emerging threats — one-sided email communication, limited exec access, single-threaded relationships, and forecast misalignment.</div>
+        <div class="signal-tags">
+          <span class="tag priority-critical">Critical Priority</span>
+          <span class="tag stage">Negotiation+</span>
+        </div>
+      </div>
+    </div>
+    <div class="detect-section">
+      <div class="label">Detection patterns</div>
+      <div class="detect-grid">
+        <div class="detect-item"><div class="dot orange"></div>Engagement imbalance (&gt;70% outbound emails)</div>
+        <div class="detect-item"><div class="dot orange"></div>Limited executive access (&lt;25% meetings with Dir/VP/Exec)</div>
+        <div class="detect-item"><div class="dot orange"></div>Single-threading risk (&lt;3 people engaged)</div>
+        <div class="detect-item"><div class="dot orange"></div>Forecast category misaligned with stage</div>
+        <div class="detect-item"><div class="dot orange"></div>Legal/procurement bottlenecks</div>
+      </div>
+    </div>
+    <div class="output-section">
+      <div class="label">Example output</div>
+      <div class="output-preview">
+        <div class="icon-line">⚠️ AT RISK - Medium Confidence</div>
+        <span class="bullet">•</span> 82% outbound email ratio — one-sided communication<br>
+        <span class="bullet">•</span> Only 2 stakeholders engaged, no exec sponsor identified<br>
+        <span class="bullet">•</span> Forecast: Commit, but engagement level at 35%<br>
+        <div class="action">Action: Multi-thread immediately. Request intro to economic buyer via champion. Validate close date with procurement timeline.</div>
+      </div>
+    </div>
+    <div class="metrics-section">
+      <div class="label">OOTB metrics</div>
+      <div class="metrics-pills">
+        <span class="metric-pill">% emails outbound/inbound</span>
+        <span class="metric-pill">% meetings with Dir/VP/Exec</span>
+        <span class="metric-pill">executives_high_engagement</span>
+        <span class="metric-pill">people_engaged (30d)</span>
+        <span class="metric-pill">days_in_stage</span>
+        <span class="metric-pill">forecast_category</span>
+      </div>
+    </div>
+    <button class="prompt-toggle" onclick="togglePrompt('prompt-risk', this)"><span>▶</span> Show full system prompt</button>
+    <div class="prompt-block" id="prompt-risk">
+      <button class="prompt-copy" onclick="copyPrompt('prompt-risk')">Copy</button>
+      <pre class="prompt-pre">You are an AI sales analyst specializing in deal risk detection. Evaluate whether this opportunity has emerging threats that could jeopardize the deal.
+
+## What to Detect
+- Engagement imbalance (>70% outbound emails, one-sided)
+- Limited executive access (<25% meetings with Dir/VP/Exec)
+- Single-threading risk (<3 people engaged)
+- Legal/procurement bottlenecks (extended meetings with legal)
+- Forecast misalignment (category doesn't match stage progression)
+
+## Output Format
+⚠️ AT RISK - {Confidence Level}
+• {Engagement balance}
+• {Executive access}
+• {Stakeholder coverage}
+• {Forecast alignment}
+
+Action: {Specific mitigation step}</pre>
+    </div>
+  </div>
+
+  <!-- Signal 3: Expansion Opportunity -->
+  <div class="signal-card" id="expansion">
+    <div class="signal-top">
+      <div class="signal-icon expansion">💎</div>
+      <div class="signal-info">
+        <div class="signal-name">Expansion Opportunity</div>
+        <div class="signal-meta-row">
+          <span>Sub-median deal size</span>
+          <span>·</span>
+          <span>~20 min setup</span>
+        </div>
+        <div class="signal-desc">Detects deals where the engagement level is disproportionately high for the deal size — suggesting the scope should be larger. Finds hidden upside in existing pipeline.</div>
+        <div class="signal-tags">
+          <span class="tag priority-high">High Value</span>
+          <span class="tag stage">Sub-median deals</span>
+        </div>
+      </div>
+    </div>
+    <div class="detect-section">
+      <div class="label">Detection patterns</div>
+      <div class="detect-grid">
+        <div class="detect-item"><div class="dot green"></div>High activity on small deal (activities &gt;2x median)</div>
+        <div class="detect-item"><div class="dot green"></div>Executive over-investment (&gt;50% exec meetings)</div>
+        <div class="detect-item"><div class="dot green"></div>Cross-functional engagement (3+ departments)</div>
+        <div class="detect-item"><div class="dot green"></div>New stakeholders joining rapidly (4+ in 30d)</div>
+      </div>
+    </div>
+    <div class="output-section">
+      <div class="label">Example output</div>
+      <div class="output-preview">
+        <div class="icon-line">💎 EXPANSION OPPORTUNITY - High Confidence</div>
+        <span class="bullet">•</span> 47 activities on a $35K deal (median: 18 for this size)<br>
+        <span class="bullet">•</span> 55% meetings include VP+ level — unusual for deal size<br>
+        <span class="bullet">•</span> 6 new stakeholders in 30d across Engineering, Security, Ops<br>
+        <div class="action">Potential: $35K → $120K (3.4x expansion)<br>Action: Reposition as enterprise deal. Propose multi-department rollout with exec sponsor.</div>
+      </div>
+    </div>
+    <div class="metrics-section">
+      <div class="label">OOTB metrics</div>
+      <div class="metrics-pills">
+        <span class="metric-pill">total_activities_count</span>
+        <span class="metric-pill">converted_amount</span>
+        <span class="metric-pill">% meetings with Dir/VP/Exec</span>
+        <span class="metric-pill">executives_high_engagement</span>
+        <span class="metric-pill">people_engaged (30d)</span>
+        <span class="metric-pill">new_people_engaged (30d)</span>
+      </div>
+    </div>
+    <button class="prompt-toggle" onclick="togglePrompt('prompt-expansion', this)"><span>▶</span> Show full system prompt</button>
+    <div class="prompt-block" id="prompt-expansion">
+      <button class="prompt-copy" onclick="copyPrompt('prompt-expansion')">Copy</button>
+      <pre class="prompt-pre">You are an AI sales analyst specializing in deal expansion detection. Evaluate whether this opportunity has untapped potential that suggests the deal size should be larger.
+
+## What to Detect
+- High activity on small deal (activities > 2x median for deal size)
+- Executive over-investment (>50% meetings with Dir/VP/Exec on small deal)
+- Cross-functional engagement (contacts across 3+ departments)
+- Multi-department participation
+- New stakeholders joining rapidly (4+ new in 30d)
+
+## Output Format
+💎 EXPANSION OPPORTUNITY - {Confidence Level}
+• {Activity vs deal size disparity}
+• {Executive involvement}
+• {Stakeholder breadth}
+• {New contact velocity}
+
+Potential: ${current} → ${expanded} (${delta} expansion)
+Action: {Repositioning recommendation}</pre>
+    </div>
+  </div>
+
+  <!-- Signal 4: Acceleration -->
+  <div class="signal-card" id="acceleration">
+    <div class="signal-top">
+      <div class="signal-icon accel">🚀</div>
+      <div class="signal-info">
+        <div class="signal-name">Deal Acceleration</div>
+        <div class="signal-meta-row">
+          <span>Proposal+ stages</span>
+          <span>·</span>
+          <span>~20 min setup</span>
+        </div>
+        <div class="signal-desc">Detects deals showing signs of accelerated close readiness — meeting surges, new exec engagement, in-person meetings, and rapid stage progression.</div>
+        <div class="signal-tags">
+          <span class="tag priority-high">High Value</span>
+          <span class="tag stage">Proposal+</span>
+        </div>
+      </div>
+    </div>
+    <div class="detect-section">
+      <div class="label">Detection patterns</div>
+      <div class="detect-grid">
+        <div class="detect-item"><div class="dot blue"></div>Meeting frequency surge (50%+ increase in 14d)</div>
+        <div class="detect-item"><div class="dot blue"></div>Executive activation (new execs joining)</div>
+        <div class="detect-item"><div class="dot blue"></div>In-person meeting spike (high-commitment signal)</div>
+        <div class="detect-item"><div class="dot blue"></div>Rapid stage progression (below avg cycle time)</div>
+        <div class="detect-item"><div class="dot blue"></div>Non-recurring meetings increasing (strategic conversations)</div>
+      </div>
+    </div>
+    <div class="output-section">
+      <div class="label">Example output</div>
+      <div class="output-preview">
+        <div class="icon-line">🚀 ACCELERATING - High Confidence</div>
+        <span class="bullet">•</span> Meetings up 120% (3→7 in last 14d vs prior period)<br>
+        <span class="bullet">•</span> VP of Engineering joined last 2 meetings — new exec activation<br>
+        <span class="bullet">•</span> 2 in-person meetings scheduled (high commitment signal)<br>
+        <span class="bullet">•</span> Stage progression: 18 days (avg: 32 days)<br>
+        <div class="action">Time Savings: 3 weeks earlier close<br>Action: Propose accelerated timeline. Secure legal/procurement intro this week to remove close-date bottleneck.</div>
+      </div>
+    </div>
+    <div class="metrics-section">
+      <div class="label">OOTB metrics</div>
+      <div class="metrics-pills">
+        <span class="metric-pill">meetings (14d/30d)</span>
+        <span class="metric-pill">upcoming_meetings (14d)</span>
+        <span class="metric-pill">executive_activities (30d)</span>
+        <span class="metric-pill">new_executives_engaged</span>
+        <span class="metric-pill">in_person_meetings (30d)</span>
+        <span class="metric-pill">non_recurring_meetings (30d)</span>
+        <span class="metric-pill">days_in_stage</span>
+        <span class="metric-pill">deal_cycle_time</span>
+      </div>
+    </div>
+    <button class="prompt-toggle" onclick="togglePrompt('prompt-accel', this)"><span>▶</span> Show full system prompt</button>
+    <div class="prompt-block" id="prompt-accel">
+      <button class="prompt-copy" onclick="copyPrompt('prompt-accel')">Copy</button>
+      <pre class="prompt-pre">You are an AI sales analyst specializing in deal velocity detection. Evaluate whether this opportunity is showing signs of accelerated close readiness.
+
+## What to Detect
+- Meeting frequency surge (50%+ increase in last 14d vs prior period)
+- Executive activation (new execs joining conversations)
+- In-person meeting spike (high-commitment signal)
+- Rapid stage progression (below average cycle time)
+- Non-recurring meetings increasing (net-new strategic conversations)
+
+## Output Format
+🚀 ACCELERATING - {Confidence Level}
+• {Meeting velocity change}
+• {Executive engagement}
+• {In-person signals}
+• {Stage progression speed}
+
+Time Savings: {X} weeks earlier close
+Action: {Prioritization recommendation}</pre>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function togglePrompt(id, btn) {
+  const block = document.getElementById(id);
+  const isOpen = block.classList.toggle('open');
+  btn.querySelector('span').textContent = isOpen ? '▼' : '▶';
+}
+
+function copyPrompt(id) {
+  const text = document.querySelector('#' + id + ' .prompt-pre').textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.querySelector('#' + id + ' .prompt-copy');
+    btn.textContent = 'Copied!';
+    btn.style.background = '#10b981';
+    btn.style.borderColor = '#10b981';
+    btn.style.color = 'white';
+    setTimeout(() => {
+      btn.textContent = 'Copy';
+      btn.style.background = '';
+      btn.style.borderColor = '';
+      btn.style.color = '';
+    }, 2000);
+  });
+}
+</script>
+</body>
+</html>
