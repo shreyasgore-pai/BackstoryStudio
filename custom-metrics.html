@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Custom Metrics Guide — Opportunity Insights</title>
+<link href="https://fonts.googleapis.com/css2?family=Cardo:ital,wght@0,400;0,700;1,400&family=Roboto:wght@300;400;500;700;900&family=Chivo+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #f5f5f4;
+  --surface: #ffffff;
+  --surface2: #fafaf9;
+  --border: #e5e5e4;
+  --border2: #d1d0ce;
+  --black: #000000;
+  --graphite: #171721;
+  --surface-gray: #BBBCBC;
+  --horizon: #6296AD;
+  --white: #FFFFFF;
+  --plum: #B08FA2;
+  --mint: #8FCDA8;
+  --cinder: #C05527;
+  --indigo: #275198;
+  --cobalt: #21B5FF;
+  --accent: #6296AD;
+  --accent-dark: #4a7a8f;
+  --accent2: #275198;
+  --green: #8FCDA8;
+  --green-dark: #2d7a50;
+  --text: #171721;
+  --text-muted: #6b6b72;
+  --text-dim: #9b9b9e;
+  --mono: 'Chivo Mono', monospace;
+  --sans: 'Roboto', sans-serif;
+  --serif: 'Cardo', serif;
+}
+
+body {
+  font-family: var(--sans);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  line-height: 1.6;
+}
+
+/* ── LAYOUT ── */
+.page { max-width: 960px; margin: 0 auto; padding: 40px 24px 80px; }
+
+.back-link {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: var(--mono); font-size: 12px; color: var(--accent);
+  text-decoration: none; margin-bottom: 32px; letter-spacing: 0.02em;
+}
+.back-link:hover { color: var(--accent-dark); }
+
+/* ── HERO ── */
+.hero {
+  background: var(--graphite);
+  padding: 44px 40px;
+  border-radius: 12px;
+  margin-bottom: 40px;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute; top: 0; right: 0; bottom: 0;
+  width: 4px;
+  background: linear-gradient(180deg, var(--surface-gray), var(--plum), var(--horizon), #E8A090, var(--surface-gray));
+}
+.hero-tag {
+  font-family: var(--mono); color: var(--surface-gray);
+  font-size: 10px; font-weight: 500; letter-spacing: 0.12em;
+  text-transform: uppercase; margin-bottom: 14px;
+}
+.hero h1 {
+  font-family: var(--serif); font-size: 36px; font-weight: 400;
+  color: var(--white); line-height: 1.15; margin-bottom: 12px;
+}
+.hero h1 span { color: var(--horizon); }
+.hero p {
+  font-size: 14px; color: var(--surface-gray); line-height: 1.65;
+  max-width: 600px; font-weight: 300;
+}
+.hero-stats {
+  display: flex; gap: 36px; margin-top: 24px;
+}
+.stat-num {
+  font-family: var(--mono); font-size: 24px; font-weight: 700;
+  color: var(--white); letter-spacing: -0.02em;
+}
+.stat-label {
+  font-size: 10px; color: var(--surface-gray); margin-top: 2px;
+  font-family: var(--mono); text-transform: uppercase; letter-spacing: 0.08em;
+}
+
+/* ── HOW-TO ── */
+.how-to-section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 32px 36px;
+  margin-bottom: 32px;
+}
+.how-to-section h2 {
+  font-size: 20px; font-weight: 900; color: var(--graphite);
+  margin-bottom: 6px; letter-spacing: -0.01em;
+}
+.how-to-section .sub { font-size: 14px; color: var(--text-muted); margin-bottom: 20px; }
+.steps-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+}
+.how-step {
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 8px; padding: 18px 20px;
+}
+.how-step-num {
+  font-family: var(--mono); font-size: 10px; font-weight: 500;
+  color: var(--accent); text-transform: uppercase; letter-spacing: 0.08em;
+  margin-bottom: 6px;
+}
+.how-step-title {
+  font-size: 15px; font-weight: 700; color: var(--graphite); margin-bottom: 4px;
+}
+.how-step-desc {
+  font-size: 13px; color: var(--text-muted); line-height: 1.5;
+}
+
+/* ── TIER HEADER ── */
+.tier-header {
+  display: flex; align-items: center; gap: 12px;
+  margin: 40px 0 20px; padding-bottom: 12px;
+  border-bottom: 2px solid var(--graphite);
+}
+.tier-badge {
+  font-family: var(--mono); font-size: 10px; font-weight: 700;
+  color: var(--white); background: var(--graphite);
+  padding: 4px 10px; border-radius: 4px; text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.tier-title { font-size: 20px; font-weight: 900; color: var(--graphite); }
+.tier-desc { font-size: 13px; color: var(--text-muted); margin-left: auto; }
+
+/* ── METRIC CARD ── */
+.metric-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  margin-bottom: 20px;
+  overflow: hidden;
+  transition: box-shadow 0.2s;
+}
+.metric-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.06); }
+
+.metric-top {
+  padding: 24px 28px 20px;
+  display: flex; align-items: flex-start; gap: 16px;
+}
+.metric-icon {
+  width: 44px; height: 44px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; flex-shrink: 0;
+}
+.metric-icon.opp { background: #eff6ff; }
+.metric-icon.acct { background: #f0fdf4; }
+.metric-info { flex: 1; min-width: 0; }
+.metric-name {
+  font-size: 17px; font-weight: 700; color: var(--graphite); margin-bottom: 2px;
+}
+.metric-slug {
+  font-family: var(--mono); font-size: 11px; color: var(--text-dim);
+  margin-bottom: 8px;
+}
+.metric-desc { font-size: 14px; color: var(--text-muted); line-height: 1.5; }
+
+.metric-tags {
+  display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px;
+}
+.tag {
+  font-family: var(--mono); font-size: 10px; font-weight: 500;
+  padding: 3px 8px; border-radius: 4px; letter-spacing: 0.02em;
+}
+.tag.formula { background: #f3e8ff; color: #7c3aed; }
+.tag.insight { background: #fef3c7; color: #92400e; }
+.tag.object { background: #ecfdf5; color: #065f46; }
+
+/* ── THRESHOLDS ── */
+.threshold-bar {
+  display: flex; margin: 0 28px 16px; border-radius: 6px; overflow: hidden;
+  height: 32px; font-family: var(--mono); font-size: 10px; font-weight: 500;
+}
+.threshold-bar .seg {
+  display: flex; align-items: center; justify-content: center;
+  padding: 0 8px; white-space: nowrap; color: white;
+}
+.seg.critical { background: #dc2626; flex: 1; }
+.seg.warn { background: #f59e0b; flex: 1; }
+.seg.ok { background: #3b82f6; flex: 1; }
+.seg.good { background: #10b981; flex: 1; }
+
+.coaching {
+  margin: 0 28px 16px; padding: 12px 16px; border-radius: 8px;
+  background: #f8fafc; border-left: 3px solid var(--accent);
+  font-size: 13px; color: var(--text-muted); line-height: 1.5;
+}
+.coaching strong { color: var(--graphite); font-weight: 600; }
+
+/* ── FORMULA ── */
+.formula-section {
+  margin: 0 28px 16px; padding: 14px 18px; border-radius: 8px;
+  background: var(--graphite); color: #a8b2c1;
+  font-family: var(--mono); font-size: 12px; line-height: 1.6;
+}
+.formula-section .label {
+  font-size: 9px; text-transform: uppercase; letter-spacing: 0.1em;
+  color: var(--surface-gray); margin-bottom: 6px;
+}
+.formula-section .expr {
+  color: var(--cobalt); font-size: 15px; font-weight: 700; margin-bottom: 8px;
+}
+.formula-section .param { color: var(--mint); }
+.formula-section .dim { color: #636d83; }
+
+/* ── JSON BLOCK ── */
+.json-toggle {
+  display: flex; align-items: center; gap: 6px;
+  margin: 0 28px 4px; padding: 8px 0;
+  font-family: var(--mono); font-size: 12px; color: var(--accent);
+  cursor: pointer; border: none; background: none;
+}
+.json-toggle:hover { color: var(--accent-dark); }
+.json-block {
+  display: none; margin: 0 28px 20px; position: relative;
+}
+.json-block.open { display: block; }
+.json-pre {
+  background: var(--graphite); color: #a8b2c1; padding: 16px 20px;
+  border-radius: 8px; font-family: var(--mono); font-size: 11px;
+  line-height: 1.5; overflow-x: auto; max-height: 400px; overflow-y: auto;
+  white-space: pre;
+}
+.json-copy {
+  position: absolute; top: 8px; right: 8px;
+  font-family: var(--mono); font-size: 11px; padding: 4px 10px;
+  border: 1px solid rgba(255,255,255,0.2); border-radius: 4px;
+  background: rgba(255,255,255,0.05); color: var(--surface-gray);
+  cursor: pointer; transition: all 0.2s;
+}
+.json-copy:hover { background: var(--horizon); color: white; border-color: var(--horizon); }
+
+/* ── TABLES MAPPING ── */
+.tables-section {
+  margin: 0 28px 20px;
+}
+.tables-section .label {
+  font-family: var(--mono); font-size: 10px; text-transform: uppercase;
+  letter-spacing: 0.08em; color: var(--text-dim); margin-bottom: 6px;
+}
+.table-pills { display: flex; gap: 6px; flex-wrap: wrap; }
+.table-pill {
+  font-size: 12px; padding: 4px 10px; border-radius: 20px;
+  background: var(--surface2); border: 1px solid var(--border);
+  color: var(--text-muted);
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <a href="index.html" class="back-link">&larr; Back to Deployment Guide</a>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-tag">Custom Metrics · Configuration Guide · v1.0</div>
+    <h1>Opportunity Insights<br><span>Custom Metrics</span></h1>
+    <p>6 FormulaMetrics that power the Enhanced EDB tables. These compute engagement ratios, coverage percentages, and momentum signals from OOTB activity data — no custom fields required.</p>
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-num">3</div><div class="stat-label">Opportunity Metrics</div></div>
+      <div class="stat"><div class="stat-num">3</div><div class="stat-label">Account Metrics</div></div>
+      <div class="stat"><div class="stat-num">0</div><div class="stat-label">Custom Fields</div></div>
+    </div>
+  </div>
+
+  <!-- HOW TO CREATE -->
+  <div class="how-to-section">
+    <h2>How to Create Custom Metrics</h2>
+    <p class="sub">Custom metrics are deployed via the Backstory Admin API or manual import in the Admin Console.</p>
+    <div class="steps-grid">
+      <div class="how-step">
+        <div class="how-step-num">Step 1</div>
+        <div class="how-step-title">Copy the JSON</div>
+        <div class="how-step-desc">Expand the JSON definition for any metric below and click <strong>Copy</strong>. This is the complete metric payload.</div>
+      </div>
+      <div class="how-step">
+        <div class="how-step-num">Step 2</div>
+        <div class="how-step-title">Open the Metric Builder</div>
+        <div class="how-step-desc">Navigate to <strong>Backstory Admin → Custom Metrics → Metric Builder</strong>.</div>
+      </div>
+      <div class="how-step">
+        <div class="how-step-num">Step 3</div>
+        <div class="how-step-title">Create Metric</div>
+        <div class="how-step-desc">Click <strong>New Metric</strong>, select <strong>FormulaMetric</strong> type, and paste the JSON definition into the configuration.</div>
+      </div>
+      <div class="how-step">
+        <div class="how-step-num">Step 4</div>
+        <div class="how-step-title">Verify &amp; Activate</div>
+        <div class="how-step-desc">Save, then check the metric appears in EDB column picker. Data populates within 24 hours of activation.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TIER 1: OPPORTUNITY METRICS -->
+  <div class="tier-header">
+    <span class="tier-badge">Tier 1</span>
+    <span class="tier-title">Opportunity-Level Metrics</span>
+    <span class="tier-desc">Used in Tables 1, 2, 4 (Enhanced)</span>
+  </div>
+
+  <!-- METRIC 1: Email Response Ratio -->
+  <div class="metric-card" id="email-responsiveness-opp">
+    <div class="metric-top">
+      <div class="metric-icon opp">📧</div>
+      <div class="metric-info">
+        <div class="metric-name">Email Response Ratio</div>
+        <div class="metric-slug">opportunity_email_responsiveness</div>
+        <div class="metric-desc">Ratio of inbound emails received to outbound emails sent. Detects one-way chasing where the customer has gone silent.</div>
+        <div class="metric-tags">
+          <span class="tag formula">FormulaMetric</span>
+          <span class="tag object">Opportunity</span>
+          <span class="tag insight">Risk Recognition</span>
+          <span class="tag insight">Stalled Detection</span>
+        </div>
+      </div>
+    </div>
+    <div class="threshold-bar">
+      <div class="seg critical" style="flex:1.2;">< 0.3 One-Way</div>
+      <div class="seg warn">0.3–0.5 Declining</div>
+      <div class="seg ok">0.5–0.8 Healthy</div>
+      <div class="seg good">> 0.8 Engaged</div>
+    </div>
+    <div class="coaching">
+      <strong>Coaching guidance:</strong> Below 0.3 = one-way communication, customer is disengaged. 0.3–0.5 = declining responsiveness. Above 0.5 = healthy two-way engagement.
+    </div>
+    <div class="formula-section">
+      <div class="label">Formula</div>
+      <div class="expr">a / b</div>
+      <span class="param">a</span> = Count of inbound emails <span class="dim">(email_org_wide_outbound = false)</span><br>
+      <span class="param">b</span> = Count of outbound emails <span class="dim">(email_org_wide_outbound = true)</span><br>
+      <span class="dim">Time ranges: 7d, 14d, 30d, quarter, all time</span>
+    </div>
+    <button class="json-toggle" onclick="toggleJson('json-email-opp', this)"><span>▶</span> Show JSON definition</button>
+    <div class="json-block" id="json-email-opp">
+      <button class="json-copy" onclick="copyJson('json-email-opp')">Copy</button>
+      <pre class="json-pre" id="pre-json-email-opp"></pre>
+    </div>
+    <div class="tables-section">
+      <div class="label">Used in tables</div>
+      <div class="table-pills">
+        <span class="table-pill">🔴 Table 1: Stalled Detection</span>
+        <span class="table-pill">⚠️ Table 2: Risk Recognition</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- METRIC 2: % Executive Meetings -->
+  <div class="metric-card" id="exec-coverage-opp">
+    <div class="metric-top">
+      <div class="metric-icon opp">👔</div>
+      <div class="metric-info">
+        <div class="metric-name">% Executive Meetings</div>
+        <div class="metric-slug">opportunity_exec_coverage_pct</div>
+        <div class="metric-desc">Percentage of external meetings that include Director, VP, or Executive-level participants. Measures whether the deal is running above or below the power line.</div>
+        <div class="metric-tags">
+          <span class="tag formula">FormulaMetric</span>
+          <span class="tag object">Opportunity</span>
+          <span class="tag insight">Risk Recognition</span>
+          <span class="tag insight">Acceleration</span>
+        </div>
+      </div>
+    </div>
+    <div class="threshold-bar">
+      <div class="seg critical">< 10% Below Power Line</div>
+      <div class="seg warn">10–25% Limited</div>
+      <div class="seg ok">25–40% Adequate</div>
+      <div class="seg good">> 40% Strong</div>
+    </div>
+    <div class="coaching">
+      <strong>Coaching guidance:</strong> Below 10% = deal is running below the power line. 10–25% = limited decision-maker access, risk of no-decision. Above 25% = healthy decision-maker engagement.
+    </div>
+    <div class="formula-section">
+      <div class="label">Formula</div>
+      <div class="expr">100 * a / b</div>
+      <span class="param">a</span> = Meetings with exec-level external participants <span class="dim">(seniority in [Executive, VP, Director])</span><br>
+      <span class="param">b</span> = All external meetings<br>
+      <span class="dim">Time ranges: 14d, 30d, quarter, all time</span>
+    </div>
+    <button class="json-toggle" onclick="toggleJson('json-exec-opp', this)"><span>▶</span> Show JSON definition</button>
+    <div class="json-block" id="json-exec-opp">
+      <button class="json-copy" onclick="copyJson('json-exec-opp')">Copy</button>
+      <pre class="json-pre" id="pre-json-exec-opp"></pre>
+    </div>
+    <div class="tables-section">
+      <div class="label">Used in tables</div>
+      <div class="table-pills">
+        <span class="table-pill">⚠️ Table 2: Risk Recognition</span>
+        <span class="table-pill">🚀 Table 4: Acceleration Signals</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- METRIC 3: Stakeholder Breadth Index -->
+  <div class="metric-card" id="stakeholder-breadth-opp">
+    <div class="metric-top">
+      <div class="metric-icon opp">👥</div>
+      <div class="metric-info">
+        <div class="metric-name">Stakeholder Breadth Index</div>
+        <div class="metric-slug">opportunity_stakeholder_breadth</div>
+        <div class="metric-desc">Unique external contacts engaged per week in the current stage. Detects single-threading risk — deals where the rep is relying on one champion.</div>
+        <div class="metric-tags">
+          <span class="tag formula">FormulaMetric</span>
+          <span class="tag object">Opportunity</span>
+          <span class="tag insight">Risk Recognition</span>
+          <span class="tag insight">Hidden Opportunity</span>
+        </div>
+      </div>
+    </div>
+    <div class="threshold-bar">
+      <div class="seg critical" style="flex:1.2;">< 0.5 Single-Threaded</div>
+      <div class="seg warn">0.5–1.0 Thin</div>
+      <div class="seg ok">1.0–2.0 Healthy</div>
+      <div class="seg good">> 2.0 Strong</div>
+    </div>
+    <div class="coaching">
+      <strong>Coaching guidance:</strong> Below 0.5 = dangerously narrow engagement for time in stage. 0.5–1.0 = not enough new contacts. Above 1.0 = steady stakeholder expansion.
+    </div>
+    <div class="formula-section">
+      <div class="label">Formula</div>
+      <div class="expr">7 * a / b</div>
+      <span class="param">a</span> = Count of unique external contacts <span class="dim">(meetings + emails, distinct person_email)</span><br>
+      <span class="param">b</span> = Days in current stage <span class="dim">(opportunity_days_in_stage field)</span><br>
+      <span class="dim">Time ranges: 30d, quarter, all time</span>
+    </div>
+    <button class="json-toggle" onclick="toggleJson('json-stakeholder-opp', this)"><span>▶</span> Show JSON definition</button>
+    <div class="json-block" id="json-stakeholder-opp">
+      <button class="json-copy" onclick="copyJson('json-stakeholder-opp')">Copy</button>
+      <pre class="json-pre" id="pre-json-stakeholder-opp"></pre>
+    </div>
+    <div class="tables-section">
+      <div class="label">Used in tables</div>
+      <div class="table-pills">
+        <span class="table-pill">⚠️ Table 2: Risk Recognition</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- TIER 2: ACCOUNT METRICS -->
+  <div class="tier-header">
+    <span class="tier-badge">Tier 2</span>
+    <span class="tier-title">Account-Level Metrics</span>
+    <span class="tier-desc">Used in Table 3 (Hidden Opportunity — Enhanced)</span>
+  </div>
+
+  <!-- METRIC 4: Engagement Momentum -->
+  <div class="metric-card" id="engagement-momentum-acct">
+    <div class="metric-top">
+      <div class="metric-icon acct">📈</div>
+      <div class="metric-info">
+        <div class="metric-name">Engagement Momentum</div>
+        <div class="metric-slug">account_engagement_momentum</div>
+        <div class="metric-desc">Rate of engagement acceleration — compares the last 14 days of activity to the last 30 days. Rising momentum on an account with no open opportunity is a strong hidden deal signal.</div>
+        <div class="metric-tags">
+          <span class="tag formula">FormulaMetric</span>
+          <span class="tag object">Account</span>
+          <span class="tag insight">Hidden Opportunity</span>
+        </div>
+      </div>
+    </div>
+    <div class="threshold-bar">
+      <div class="seg critical">< 50% Fading</div>
+      <div class="seg warn">50–80% Cooling</div>
+      <div class="seg ok">80–100% Steady</div>
+      <div class="seg good">> 100% Accelerating</div>
+    </div>
+    <div class="coaching">
+      <strong>Coaching guidance:</strong> Above 100% = engagement accelerating (recent activity outpacing prior period). 50–100% = steady. Below 50% = engagement fading.
+    </div>
+    <div class="formula-section">
+      <div class="label">Formula</div>
+      <div class="expr">100 * a / b</div>
+      <span class="param">a</span> = External meetings + inbound emails, last 14 days<br>
+      <span class="param">b</span> = External meetings + inbound emails, last 30 days<br>
+      <span class="dim">Ratio > 46.7% means recent half is more active than the earlier half</span>
+    </div>
+    <button class="json-toggle" onclick="toggleJson('json-momentum-acct', this)"><span>▶</span> Show JSON definition</button>
+    <div class="json-block" id="json-momentum-acct">
+      <button class="json-copy" onclick="copyJson('json-momentum-acct')">Copy</button>
+      <pre class="json-pre" id="pre-json-momentum-acct"></pre>
+    </div>
+    <div class="tables-section">
+      <div class="label">Used in tables</div>
+      <div class="table-pills">
+        <span class="table-pill">💎 Table 3: Hidden Opportunity</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- METRIC 5: Executive Coverage (Account) -->
+  <div class="metric-card" id="exec-coverage-acct">
+    <div class="metric-top">
+      <div class="metric-icon acct">👔</div>
+      <div class="metric-info">
+        <div class="metric-name">Executive Coverage</div>
+        <div class="metric-slug">account_executive_coverage</div>
+        <div class="metric-desc">Percentage of external activities involving Director, VP, or Executive-level contacts. High exec coverage on an account without an open deal = strategic conversation that needs a pipeline entry.</div>
+        <div class="metric-tags">
+          <span class="tag formula">FormulaMetric</span>
+          <span class="tag object">Account</span>
+          <span class="tag insight">Hidden Opportunity</span>
+        </div>
+      </div>
+    </div>
+    <div class="threshold-bar">
+      <div class="seg critical">< 10% Low</div>
+      <div class="seg warn">10–20% Moderate</div>
+      <div class="seg ok">20–30% Good</div>
+      <div class="seg good">> 30% Strategic</div>
+    </div>
+    <div class="coaching">
+      <strong>Coaching guidance:</strong> Above 30% with no open opp = strategic conversation needs a deal. This is the strongest signal for hidden pipeline.
+    </div>
+    <div class="formula-section">
+      <div class="label">Formula</div>
+      <div class="expr">100 * a / b</div>
+      <span class="param">a</span> = External activities with exec-level participants <span class="dim">(seniority in [Executive, VP, Director])</span><br>
+      <span class="param">b</span> = All external activities<br>
+      <span class="dim">Time ranges: 14d, 30d, quarter, all time</span>
+    </div>
+    <button class="json-toggle" onclick="toggleJson('json-exec-acct', this)"><span>▶</span> Show JSON definition</button>
+    <div class="json-block" id="json-exec-acct">
+      <button class="json-copy" onclick="copyJson('json-exec-acct')">Copy</button>
+      <pre class="json-pre" id="pre-json-exec-acct"></pre>
+    </div>
+    <div class="tables-section">
+      <div class="label">Used in tables</div>
+      <div class="table-pills">
+        <span class="table-pill">💎 Table 3: Hidden Opportunity</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- METRIC 6: Email Responsiveness (Account) -->
+  <div class="metric-card" id="email-responsiveness-acct">
+    <div class="metric-top">
+      <div class="metric-icon acct">📧</div>
+      <div class="metric-info">
+        <div class="metric-name">Email Responsiveness</div>
+        <div class="metric-slug">account_email_responsiveness</div>
+        <div class="metric-desc">Ratio of inbound to outbound emails at the account level. Distinguishes genuine two-way engagement from one-way prospecting on accounts without open opportunities.</div>
+        <div class="metric-tags">
+          <span class="tag formula">FormulaMetric</span>
+          <span class="tag object">Account</span>
+          <span class="tag insight">Hidden Opportunity</span>
+        </div>
+      </div>
+    </div>
+    <div class="threshold-bar">
+      <div class="seg critical" style="flex:1.2;">< 0.3 One-Way</div>
+      <div class="seg warn">0.3–0.5 Low</div>
+      <div class="seg ok">0.5–0.8 Two-Way</div>
+      <div class="seg good">> 0.8 Engaged</div>
+    </div>
+    <div class="coaching">
+      <strong>Coaching guidance:</strong> Above 0.5 = two-way conversation indicating real engagement. Below 0.3 = one-way prospecting, not a strong hidden opp signal.
+    </div>
+    <div class="formula-section">
+      <div class="label">Formula</div>
+      <div class="expr">a / b</div>
+      <span class="param">a</span> = Inbound external emails <span class="dim">(outbound = false)</span><br>
+      <span class="param">b</span> = Outbound external emails <span class="dim">(outbound = true)</span><br>
+      <span class="dim">Time ranges: 7d, 14d, 30d, quarter, all time</span>
+    </div>
+    <button class="json-toggle" onclick="toggleJson('json-email-acct', this)"><span>▶</span> Show JSON definition</button>
+    <div class="json-block" id="json-email-acct">
+      <button class="json-copy" onclick="copyJson('json-email-acct')">Copy</button>
+      <pre class="json-pre" id="pre-json-email-acct"></pre>
+    </div>
+    <div class="tables-section">
+      <div class="label">Used in tables</div>
+      <div class="table-pills">
+        <span class="table-pill">💎 Table 3: Hidden Opportunity</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ── METRIC JSON DATA ──
+const METRICS = {
+  "json-email-opp": {"slug":"opportunity_email_responsiveness","object":"opportunity","definition":{"attribute_type":"FormulaMetric","data_type":"double","f":"a / b","params":{"a":{"attribute_type":"TimeRangeMetric","data_type":"integer","entity":"activity","agg":"count","connection_field":"opportunity_id","timestamp_field":"timestamp","time_ranges":["last_7_days","last_14_days","last_30_days","this_quarter","any_time"],"filters":{"":{"$and":[{"activity_type":{"$eq":"email"}},{"email_org_wide_outbound":{"$eq":false}}]}}},"b":{"attribute_type":"TimeRangeMetric","data_type":"integer","entity":"activity","agg":"count","connection_field":"opportunity_id","timestamp_field":"timestamp","time_ranges":["last_7_days","last_14_days","last_30_days","this_quarter","any_time"],"filters":{"":{"$and":[{"activity_type":{"$eq":"email"}},{"email_org_wide_outbound":{"$eq":true}}]}}}},"meta":{"drill_in_conf":{"metric":"a","display_name":"Emails Received"}}},"display_name":"Email Response Ratio","description":"Ratio of inbound emails received to outbound emails sent.","coaching_text":"Below 0.3 = one-way communication. 0.3-0.5 = declining responsiveness. Above 0.5 = healthy two-way engagement.","active":true,"show":true,"source":"people_ai"},
+  "json-exec-opp": {"slug":"opportunity_exec_coverage_pct","object":"opportunity","definition":{"attribute_type":"FormulaMetric","data_type":"percentage","f":"100 * a / b","params":{"a":{"attribute_type":"TimeRangeMetric","data_type":"integer","entity":"activity","agg":"count","connection_field":"opportunity_id","timestamp_field":"timestamp","time_ranges":["last_14_days","last_30_days","this_quarter","any_time"],"filters":{"":{"$and":[{"activity_type":{"$eq":"meeting"}},{"external":{"$eq":true}},{"participants":{"$nested":[{"participants.external":{"$eq":true}},{"participants.seniority":{"$in":["Executive","Vice President","Director"]}}]}}]}}},"b":{"attribute_type":"TimeRangeMetric","data_type":"integer","entity":"activity","agg":"count","connection_field":"opportunity_id","timestamp_field":"timestamp","time_ranges":["last_14_days","last_30_days","this_quarter","any_time"],"filters":{"activity_type":{"$eq":"meeting"},"external":{"$eq":true}}}},"meta":{"drill_in_conf":{"metric":"a","display_name":"Executive Meetings"}}},"display_name":"% Executive Meetings","description":"Percentage of external meetings that include Director, VP, or Executive-level participants.","coaching_text":"Below 10% = below the power line. 10-25% = limited exec access. Above 25% = healthy decision-maker engagement.","active":true,"show":true,"source":"people_ai"},
+  "json-stakeholder-opp": {"slug":"opportunity_stakeholder_breadth","object":"opportunity","definition":{"attribute_type":"FormulaMetric","data_type":"double","f":"7 * a / b","params":{"a":{"attribute_type":"TimeRangeMetric","data_type":"integer","entity":"activity","agg":"count(person_email)","connection_field":"opportunity_id","timestamp_field":"timestamp","time_ranges":["last_30_days","this_quarter","any_time"],"filters":{"":{"$and":[{"external":{"$eq":true}},{"$or":[{"activity_type":{"$eq":"meeting"}},{"activity_type":{"$eq":"email"}}]}]}}},"b":{"attribute_type":"Field","data_type":"integer","field_name":"opportunity_days_in_stage"}}},"display_name":"Stakeholder Breadth Index","description":"Unique external contacts engaged per week in current stage.","coaching_text":"Below 0.5 = single-threaded risk. 0.5-1.0 = thin coverage. Above 1.0 = healthy stakeholder expansion.","active":true,"show":true,"source":"people_ai"},
+  "json-momentum-acct": {"slug":"account_engagement_momentum","object":"account","definition":{"attribute_type":"FormulaMetric","data_type":"percentage","f":"100 * a / b","params":{"a":{"attribute_type":"TimeRangeMetric","data_type":"integer","entity":"activity","agg":"count","connection_field":"account_id","timestamp_field":"timestamp","time_ranges":["last_14_days"],"filters":{"":{"$or":[{"$and":[{"activity_type":{"$eq":"meeting"}},{"external":{"$eq":true}},{"is_deleted":{"$eq":false}}]},{"$and":[{"activity_type":{"$eq":"email"}},{"external":{"$eq":true}},{"outbound":{"$eq":false}},{"is_deleted":{"$eq":false}}]}]}}},"b":{"attribute_type":"TimeRangeMetric","data_type":"integer","entity":"activity","agg":"count","connection_field":"account_id","timestamp_field":"timestamp","time_ranges":["last_30_days"],"filters":{"":{"$or":[{"$and":[{"activity_type":{"$eq":"meeting"}},{"external":{"$eq":true}},{"is_deleted":{"$eq":false}}]},{"$and":[{"activity_type":{"$eq":"email"}},{"external":{"$eq":true}},{"outbound":{"$eq":false}},{"is_deleted":{"$eq":false}}]}]}}}}},"display_name":"Engagement Momentum","description":"Rate of engagement acceleration at the account level.","coaching_text":"Above 100% = engagement accelerating. 50-100% = steady. Below 50% = engagement fading.","active":true,"show":true,"source":"people_ai"},
+  "json-exec-acct": {"slug":"account_executive_coverage","object":"account","definition":{"attribute_type":"FormulaMetric","data_type":"percentage","f":"100 * a / b","params":{"a":{"attribute_type":"TimeRangeMetric","data_type":"integer","entity":"activity","agg":"count","connection_field":"account_id","timestamp_field":"timestamp","time_ranges":["last_14_days","last_30_days","this_quarter","any_time"],"filters":{"":{"$and":[{"external":{"$eq":true}},{"is_deleted":{"$eq":false}},{"participants":{"$nested":[{"participants.external":{"$eq":true}},{"participants.seniority":{"$in":["Executive","Vice President","Director"]}}]}}]}}},"b":{"attribute_type":"TimeRangeMetric","data_type":"integer","entity":"activity","agg":"count","connection_field":"account_id","timestamp_field":"timestamp","time_ranges":["last_14_days","last_30_days","this_quarter","any_time"],"filters":{"":{"$and":[{"external":{"$eq":true}},{"is_deleted":{"$eq":false}}]}}}},"meta":{"drill_in_conf":{"metric":"a","display_name":"Executive Activities"}}},"display_name":"Executive Coverage","description":"% of external activities involving Director, VP, or Executive-level contacts.","coaching_text":"Above 30% with no open opp = strategic conversation needs a deal.","active":true,"show":true,"source":"people_ai"},
+  "json-email-acct": {"slug":"account_email_responsiveness","object":"account","definition":{"attribute_type":"FormulaMetric","data_type":"double","f":"a / b","params":{"a":{"attribute_type":"TimeRangeMetric","data_type":"integer","entity":"activity","agg":"count","connection_field":"account_id","timestamp_field":"timestamp","time_ranges":["last_7_days","last_14_days","last_30_days","this_quarter","any_time"],"filters":{"":{"$and":[{"activity_type":{"$eq":"email"}},{"external":{"$eq":true}},{"outbound":{"$eq":false}},{"is_deleted":{"$eq":false}}]}}},"b":{"attribute_type":"TimeRangeMetric","data_type":"integer","entity":"activity","agg":"count","connection_field":"account_id","timestamp_field":"timestamp","time_ranges":["last_7_days","last_14_days","last_30_days","this_quarter","any_time"],"filters":{"":{"$and":[{"activity_type":{"$eq":"email"}},{"external":{"$eq":true}},{"outbound":{"$eq":true}},{"is_deleted":{"$eq":false}}]}}}},"meta":{"drill_in_conf":{"metric":"a","display_name":"Inbound Emails"}}},"display_name":"Email Responsiveness","description":"Ratio of inbound to outbound emails at the account level.","coaching_text":"Above 0.5 = two-way conversation. Below 0.3 = one-way prospecting.","active":true,"show":true,"source":"people_ai"}
+};
+
+// Populate JSON blocks on load
+Object.keys(METRICS).forEach(id => {
+  const el = document.getElementById('pre-' + id);
+  if (el) el.textContent = JSON.stringify(METRICS[id], null, 2);
+});
+
+function toggleJson(id, btn) {
+  const block = document.getElementById(id);
+  const isOpen = block.classList.toggle('open');
+  btn.querySelector('span').textContent = isOpen ? '▼' : '▶';
+}
+
+function copyJson(id) {
+  const text = document.querySelector('#' + id + ' .json-pre').textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.querySelector('#' + id + ' .json-copy');
+    btn.textContent = 'Copied!';
+    btn.style.background = '#10b981';
+    btn.style.borderColor = '#10b981';
+    btn.style.color = 'white';
+    setTimeout(() => {
+      btn.textContent = 'Copy';
+      btn.style.background = '';
+      btn.style.borderColor = '';
+      btn.style.color = '';
+    }, 2000);
+  });
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Customer Talking Track — Opportunity Insights</title>
+<link href="https://fonts.googleapis.com/css2?family=Cardo:ital,wght@0,400;0,700;1,400&family=Roboto:wght@300;400;500;700;900&family=Chivo+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #f5f5f4;
+  --surface: #ffffff;
+  --surface2: #fafaf9;
+  --border: #e5e5e4;
+  --border2: #d1d0ce;
+  --black: #000000;
+  --graphite: #171721;
+  --surface-gray: #BBBCBC;
+  --horizon: #6296AD;
+  --white: #FFFFFF;
+  --plum: #B08FA2;
+  --mint: #8FCDA8;
+  --cinder: #C05527;
+  --indigo: #275198;
+  --cobalt: #21B5FF;
+  --accent: #6296AD;
+  --accent-dark: #4a7a8f;
+  --accent2: #275198;
+  --green: #8FCDA8;
+  --green-dark: #2d7a50;
+  --text: #171721;
+  --text-muted: #6b6b72;
+  --text-dim: #9b9b9e;
+  --mono: 'Chivo Mono', monospace;
+  --sans: 'Roboto', sans-serif;
+  --serif: 'Cardo', serif;
+}
+
+body {
+  font-family: var(--sans);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  line-height: 1.6;
+}
+
+/* -- LAYOUT -- */
+.page { max-width: 960px; margin: 0 auto; padding: 40px 24px 80px; }
+
+.back-link {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: var(--mono); font-size: 12px; color: var(--accent);
+  text-decoration: none; margin-bottom: 32px; letter-spacing: 0.02em;
+}
+.back-link:hover { color: var(--accent-dark); }
+
+/* -- HERO -- */
+.hero {
+  background: var(--graphite);
+  padding: 44px 40px;
+  border-radius: 12px;
+  margin-bottom: 40px;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute; top: 0; right: 0; bottom: 0;
+  width: 4px;
+  background: linear-gradient(180deg, var(--surface-gray), var(--plum), var(--horizon), #E8A090, var(--surface-gray));
+}
+.hero-tag {
+  font-family: var(--mono); color: var(--surface-gray);
+  font-size: 10px; font-weight: 500; letter-spacing: 0.12em;
+  text-transform: uppercase; margin-bottom: 14px;
+}
+.hero h1 {
+  font-family: var(--serif); font-size: 36px; font-weight: 400;
+  color: var(--white); line-height: 1.15; margin-bottom: 12px;
+}
+.hero h1 span { color: var(--horizon); }
+.hero p {
+  font-size: 14px; color: var(--surface-gray); line-height: 1.65;
+  max-width: 600px; font-weight: 300;
+}
+.hero-stats {
+  display: flex; gap: 36px; margin-top: 24px;
+}
+.stat-num {
+  font-family: var(--mono); font-size: 24px; font-weight: 700;
+  color: var(--white); letter-spacing: -0.02em;
+}
+.stat-label {
+  font-size: 10px; color: var(--surface-gray); margin-top: 2px;
+  font-family: var(--mono); text-transform: uppercase; letter-spacing: 0.08em;
+}
+
+/* -- SECTION HEADER -- */
+.section-header {
+  display: flex; align-items: center; gap: 12px;
+  margin: 40px 0 20px; padding-bottom: 12px;
+  border-bottom: 2px solid var(--graphite);
+}
+.section-badge {
+  font-family: var(--mono); font-size: 10px; font-weight: 700;
+  color: var(--white); background: var(--graphite);
+  padding: 4px 10px; border-radius: 4px; text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.section-title { font-size: 20px; font-weight: 900; color: var(--graphite); }
+.section-desc { font-size: 13px; color: var(--text-muted); margin-left: auto; }
+
+/* -- HOW-TO / CARD -- */
+.how-to-section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 32px 36px;
+  margin-bottom: 32px;
+}
+.how-to-section h2 {
+  font-size: 20px; font-weight: 900; color: var(--graphite);
+  margin-bottom: 6px; letter-spacing: -0.01em;
+}
+.how-to-section .sub { font-size: 14px; color: var(--text-muted); margin-bottom: 20px; }
+
+/* -- PITCH CARD -- */
+.pitch-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 32px 36px;
+  margin-bottom: 32px;
+  position: relative;
+}
+.pitch-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; bottom: 0; width: 4px;
+  border-radius: 12px 0 0 12px;
+  background: linear-gradient(180deg, var(--horizon), var(--plum));
+}
+.pitch-label {
+  font-family: var(--mono); font-size: 10px; font-weight: 500;
+  color: var(--accent); text-transform: uppercase; letter-spacing: 0.08em;
+  margin-bottom: 12px;
+}
+.pitch-text {
+  font-family: var(--serif); font-size: 17px; color: var(--graphite);
+  line-height: 1.7; font-style: italic; margin-bottom: 20px;
+}
+.pitch-points {
+  list-style: none; padding: 0;
+}
+.pitch-points li {
+  padding: 10px 0;
+  border-top: 1px solid var(--border);
+  font-size: 14px; color: var(--text-muted); line-height: 1.6;
+  display: flex; align-items: flex-start; gap: 10px;
+}
+.pitch-points li strong { color: var(--graphite); }
+.pitch-num {
+  font-family: var(--mono); font-size: 11px; font-weight: 700;
+  color: var(--accent); flex-shrink: 0; margin-top: 2px;
+}
+.pitch-close {
+  font-family: var(--serif); font-size: 15px; color: var(--graphite);
+  font-style: italic; margin-top: 16px; padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+
+/* -- PERSONA CARD -- */
+.persona-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 28px 32px;
+  margin-bottom: 20px;
+}
+.persona-header {
+  display: flex; align-items: center; gap: 12px; margin-bottom: 16px;
+}
+.persona-icon {
+  width: 44px; height: 44px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; flex-shrink: 0;
+}
+.persona-icon.leader { background: #eff6ff; }
+.persona-icon.revops { background: #f0fdf4; }
+.persona-name {
+  font-size: 17px; font-weight: 700; color: var(--graphite);
+}
+.persona-sub {
+  font-size: 13px; color: var(--text-muted);
+}
+.persona-points {
+  list-style: none; padding: 0;
+}
+.persona-points li {
+  padding: 8px 0 8px 16px;
+  border-left: 2px solid var(--border);
+  margin-left: 6px;
+  font-size: 14px; color: var(--text-muted); line-height: 1.6;
+  margin-bottom: 4px;
+}
+.persona-points li strong { color: var(--graphite); }
+
+/* -- OBJECTION TABLE -- */
+.objection-table-wrap {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 32px;
+}
+.objection-table {
+  width: 100%; border-collapse: collapse;
+  font-size: 14px;
+}
+.objection-table thead th {
+  background: var(--graphite); color: var(--white);
+  font-family: var(--mono); font-size: 10px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.08em;
+  padding: 14px 20px; text-align: left;
+}
+.objection-table tbody td {
+  padding: 16px 20px; vertical-align: top;
+  border-bottom: 1px solid var(--border);
+  line-height: 1.6;
+}
+.objection-table tbody tr:last-child td { border-bottom: none; }
+.objection-table tbody td:first-child {
+  font-weight: 600; color: var(--graphite); width: 38%;
+  font-style: italic;
+}
+.objection-table tbody td:last-child {
+  color: var(--text-muted);
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <a href="index.html" class="back-link">&larr; Back to Deployment Guide</a>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-tag">Sales Enablement &middot; Talk Track &middot; v1.0</div>
+    <h1>Opportunity Insights<br><span>Customer Talking Track</span></h1>
+    <p>A condensed talking track for CSMs delivering Opportunity Insights to customers. Covers the pitch, persona-specific messaging, and objection handling.</p>
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-num">2 min</div><div class="stat-label">Pitch</div></div>
+      <div class="stat"><div class="stat-num">5 min</div><div class="stat-label">Demo</div></div>
+      <div class="stat"><div class="stat-num">2</div><div class="stat-label">Personas</div></div>
+    </div>
+  </div>
+
+  <!-- THE 2-MINUTE PITCH -->
+  <div class="section-header">
+    <span class="section-badge">Script</span>
+    <span class="section-title">The 2-Minute Pitch</span>
+    <span class="section-desc">Deliver this verbatim or adapt</span>
+  </div>
+
+  <div class="pitch-card">
+    <div class="pitch-label">Say this</div>
+    <div class="pitch-text">"Here's what your pipeline looks like through a different lens. Opportunity Insights analyzes the engagement signals your team already generates &mdash; meetings, emails, executive access &mdash; and surfaces four patterns that humans almost never catch in time:"</div>
+
+    <ol class="pitch-points">
+      <li>
+        <span class="pitch-num">01</span>
+        <div><strong>Deals going dark</strong> &mdash; engagement dropped, meetings stopped, but the deal is still in your pipeline at full value</div>
+      </li>
+      <li>
+        <span class="pitch-num">02</span>
+        <div><strong>Risk hiding in 'good' deals</strong> &mdash; the forecast says Commit but the engagement says otherwise</div>
+      </li>
+      <li>
+        <span class="pitch-num">03</span>
+        <div><strong>Deals that should exist but don't</strong> &mdash; accounts with active engagement but zero CRM pipeline</div>
+      </li>
+      <li>
+        <span class="pitch-num">04</span>
+        <div><strong>Deals you should be closing faster</strong> &mdash; everything is working but the close date is too conservative</div>
+      </li>
+    </ol>
+
+    <div class="pitch-close">"The setup takes 15 minutes. No admin access. No reps changing behavior. One view before your next pipeline review."</div>
+  </div>
+
+  <!-- FOR SALES LEADERS -->
+  <div class="section-header">
+    <span class="section-badge">Persona</span>
+    <span class="section-title">For Sales Leaders</span>
+    <span class="section-desc">VP Sales, CRO, Front-line Managers</span>
+  </div>
+
+  <div class="persona-card">
+    <div class="persona-header">
+      <div class="persona-icon leader">&#x1F3AF;</div>
+      <div>
+        <div class="persona-name">Sales Leadership Messaging</div>
+        <div class="persona-sub">Frame as coaching agenda, not surveillance</div>
+      </div>
+    </div>
+    <ul class="persona-points">
+      <li><strong>Frame everything as "coaching agenda"</strong> &mdash; not surveillance. This is about helping managers ask better questions, not monitoring reps.</li>
+      <li><strong>Lead with their biggest deal in Stalled Detection:</strong> "What would you want to ask the rep?" Let the data start the conversation.</li>
+      <li><strong>Pipeline review framing:</strong> "5 minutes of prep that transforms a 30-minute review." Position OI as pre-work, not another meeting.</li>
+      <li><strong>Revenue impact:</strong> $5-7M influenced revenue for a 50-person team. Quantify the upside in their language.</li>
+    </ul>
+  </div>
+
+  <!-- FOR REVOPS -->
+  <div class="section-header">
+    <span class="section-badge">Persona</span>
+    <span class="section-title">For RevOps</span>
+    <span class="section-desc">Revenue Operations, Sales Ops, BI</span>
+  </div>
+
+  <div class="persona-card">
+    <div class="persona-header">
+      <div class="persona-icon revops">&#x2699;</div>
+      <div>
+        <div class="persona-name">RevOps Messaging</div>
+        <div class="persona-sub">Frame as ROI on Backstory investment</div>
+      </div>
+    </div>
+    <ul class="persona-points">
+      <li><strong>Frame as "ROI on your Backstory investment"</strong> &mdash; they already bought the platform. OI unlocks more value from what they have.</li>
+      <li><strong>Lead with data quality:</strong> "This reads the data you already have." No new data sources, no new integrations to manage.</li>
+      <li><strong>Forecast integrity:</strong> "Find commit deals with hidden risk before quarter-end." Speak to their biggest pain: quarter-end surprises.</li>
+      <li><strong>No new integrations, no custom fields, 100% OOTB metrics.</strong> Zero implementation burden on RevOps. Deploys in 15 minutes.</li>
+    </ul>
+  </div>
+
+  <!-- OBJECTION HANDLING -->
+  <div class="section-header">
+    <span class="section-badge">Reference</span>
+    <span class="section-title">Objection Quick-Reference</span>
+    <span class="section-desc">Common pushback and responses</span>
+  </div>
+
+  <div class="objection-table-wrap">
+    <table class="objection-table">
+      <thead>
+        <tr>
+          <th>They say...</th>
+          <th>You say...</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>"My reps already tell me when deals are in trouble"</td>
+          <td>"When was your last quarter-end surprise? The data knew 3 weeks before the rep told you."</td>
+        </tr>
+        <tr>
+          <td>"My team will think it's Big Brother"</td>
+          <td>"Frame it to reps: 'This tells you which deals need attention before your manager asks.' Best reps love it."</td>
+        </tr>
+        <tr>
+          <td>"We do pipeline reviews already"</td>
+          <td>"This doesn't replace your review &mdash; it makes the first 5 minutes radically better."</td>
+        </tr>
+        <tr>
+          <td>"We tried AI before and it didn't work"</td>
+          <td>"This isn't prediction. It's pattern recognition on metrics your team already uses. If it says a deal is stalling, you can see exactly why."</td>
+        </tr>
+        <tr>
+          <td>"My managers don't have time for another tool"</td>
+          <td>"It's one pre-filtered table. Open before pipeline review, sort by the column that matters. That's the whole workflow."</td>
+        </tr>
+        <tr>
+          <td>"The engagement score seems off"</td>
+          <td>"Same OOTB metrics your team already uses. If something looks wrong, that's a data quality catch &mdash; which is valuable too."</td>
+        </tr>
+        <tr>
+          <td>"Can we filter by team/segment?"</td>
+          <td>"Every column is sortable and filterable. You can build a view per team, per segment, per manager."</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+</body>
+</html>
